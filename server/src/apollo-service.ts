@@ -15,11 +15,14 @@ interface QueryReuqestBody {
   variables: Record<string, string>;
 }
 
+const REDIS_PORT = process.env.REDIS_PORT || 6379;
 class AppoloService {
   #instance?: Bull.Queue;
 
   init(): void {
-    const queueInstance = new Bull<QueryReuqestBody>(queueName);
+    const queueInstance = new Bull<QueryReuqestBody>(queueName, {
+      redis: { port: +REDIS_PORT },
+    });
 
     const server = new ApolloServer<ContextValue>({
       typeDefs,
